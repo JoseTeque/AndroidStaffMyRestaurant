@@ -1,5 +1,7 @@
 package com.hermosaprogramacion.premium.androidstaffmyrestaurant.Retrofit;
 
+import com.hermosaprogramacion.premium.androidstaffmyrestaurant.Model.MaxOrderByRestaurant;
+import com.hermosaprogramacion.premium.androidstaffmyrestaurant.Model.OrderByRestaurant;
 import com.hermosaprogramacion.premium.androidstaffmyrestaurant.Model.RestaurantOwner;
 import com.hermosaprogramacion.premium.androidstaffmyrestaurant.Model.UpdateRestaurantOwner;
 
@@ -11,11 +13,22 @@ import retrofit2.http.POST;
 import retrofit2.http.Query;
 
 public interface IMyRestaurantAPI {
+    //GET
 
     @GET("restaurantOwner")
     Observable<RestaurantOwner> getRestaurantOwner(@Query("key") String key, @Query("fbid") String fbid);
 
-//POST
+    @GET("orderByRestaurant")
+    Observable<OrderByRestaurant> getOrderByRestaurant(@Query("key") String key,
+                                                       @Query("restaurantId") int restaurantId,
+                                                       @Query("from") int from,
+                                                       @Query("to") int to);
+
+    @GET("maxOrderByRestaurant")
+    Observable<MaxOrderByRestaurant> getMaxOrderByRestaurant(@Query("key") String key,
+                                                             @Query("restaurantId") int restaurantId);
+
+    //POST
 
     @POST("restaurantOwner")
     @FormUrlEncoded

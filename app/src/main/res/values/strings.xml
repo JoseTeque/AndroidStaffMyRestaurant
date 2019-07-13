@@ -23,4 +23,15 @@
     <string name="edtx_hint_address">Address</string>
     <string name="update">Update</string>
     <string name="update_information">Update Information</string>
+    <string name="your_order">Your Orden</string>
+    <string name="order">History Order</string>
+    <string name="txt_order_number">Order #1234</string>
+    <string name="txt_order_status">Processing</string>
+    <string name="txt_order_phone">123456</string>
+    <string name="txt_order_address">Address</string>
+    <string name="txt_order_cod">COD</string>
+    <string name="Order_on">Order on</string>
+    <string name="txt_date_order">05/10/2019</string>
+    <string name="txt_order_total_price">$180</string>
+    <string name="txt_num_of_item">Num of item 2</string>
 </resources>
