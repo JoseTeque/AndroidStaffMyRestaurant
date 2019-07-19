@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/img_food_image"
+                android:scaleType="fitXY"
+                android:layout_gravity="center_vertical"
+                android:layout_width="80dp"
+                android:layout_height="80dp" />
+
+            <LinearLayout
+                android:layout_marginStart="8dp"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/txt_food_name"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/magnifika"
+                    android:textSize="22sp"
+                    android:text="@string/txt_food_name"
+                    />
+
+                <TextView
+                    android:id="@+id/txt_food_quantity"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:text="@string/txt_food_quantity"
+                    />
+
+                <TextView
+                    android:id="@+id/txt_food_size"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:textSize="16sp"
+                    android:text="@string/txt_food_size"
+                    />
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:orientation="vertical"
+            android:padding="8dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.github.florent37.expansionpanel.ExpansionHeader
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:expansion_headerIndicator="@+id/headerIndicator"
+                app:expansion_layout="@+id/expansionLayout"
+                app:expansion_toggleOnClick="true">
+
+                <!-- Header -->
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/magnifika"
+                    android:text="@string/txt_Addon"
+                    android:textSize="22sp"
+                    tools:ignore="NestedWeights" />
+
+                <!-- Header Indicator -->
+
+                <ImageView
+                    android:id="@+id/headerIndicator"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical|end"
+                    android:layout_marginStart="16dp"
+                    android:adjustViewBounds="true"
+                    app:srcCompat="@drawable/ic_expansion_header_indicator_grey_24dp" />
+
+            </com.github.florent37.expansionpanel.ExpansionHeader>
+
+            <com.github.florent37.expansionpanel.ExpansionLayout
+                android:id="@+id/expansionLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/txt_add_on"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/magnifika"
+                    android:text="@string/txt_Addon"
+                    android:textSize="16sp"
+                    tools:ignore="NestedWeights" />
+
+
+            </com.github.florent37.expansionpanel.ExpansionLayout>
+
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+
+
+
+</androidx.cardview.widget.CardView>

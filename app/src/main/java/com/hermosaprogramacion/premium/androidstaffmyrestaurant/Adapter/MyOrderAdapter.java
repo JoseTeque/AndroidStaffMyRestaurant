@@ -1,6 +1,7 @@
 package com.hermosaprogramacion.premium.androidstaffmyrestaurant.Adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -16,6 +17,7 @@ import com.hermosaprogramacion.premium.androidstaffmyrestaurant.HomeActivity;
 import com.hermosaprogramacion.premium.androidstaffmyrestaurant.Interface.ClickListener;
 import com.hermosaprogramacion.premium.androidstaffmyrestaurant.Interface.ILoadMore;
 import com.hermosaprogramacion.premium.androidstaffmyrestaurant.Model.OrderByRestaurantItem;
+import com.hermosaprogramacion.premium.androidstaffmyrestaurant.OrderDetailActivity;
 import com.hermosaprogramacion.premium.androidstaffmyrestaurant.R;
 
 import java.text.SimpleDateFormat;
@@ -124,6 +126,11 @@ public class MyOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
                 viewHolder.txt_order_cod.setText(new StringBuilder("Cash on delivery"));
             else
                 viewHolder.txt_order_cod.setText(new StringBuilder("TransId: ").append(orderItem.getTransactionId()));
+
+            viewHolder.setClickListener((view, index) -> {
+                Common.currentOrder = orderItemList.get(position);
+                context.startActivity(new Intent(context, OrderDetailActivity.class));
+            });
         }
         else if (holder instanceof MyLoadingHolder)
         {
@@ -131,6 +138,8 @@ public class MyOrderAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder
 
             myLoadingHolder.progressBAR.setIndeterminate(true);
         }
+
+
     }
 
     @Override

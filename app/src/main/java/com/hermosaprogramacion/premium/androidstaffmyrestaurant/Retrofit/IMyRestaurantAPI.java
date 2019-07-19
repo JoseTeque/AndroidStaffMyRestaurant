@@ -2,6 +2,7 @@ package com.hermosaprogramacion.premium.androidstaffmyrestaurant.Retrofit;
 
 import com.hermosaprogramacion.premium.androidstaffmyrestaurant.Model.MaxOrderByRestaurant;
 import com.hermosaprogramacion.premium.androidstaffmyrestaurant.Model.OrderByRestaurant;
+import com.hermosaprogramacion.premium.androidstaffmyrestaurant.Model.OrderDetail;
 import com.hermosaprogramacion.premium.androidstaffmyrestaurant.Model.RestaurantOwner;
 import com.hermosaprogramacion.premium.androidstaffmyrestaurant.Model.UpdateRestaurantOwner;
 
@@ -27,6 +28,10 @@ public interface IMyRestaurantAPI {
     @GET("maxOrderByRestaurant")
     Observable<MaxOrderByRestaurant> getMaxOrderByRestaurant(@Query("key") String key,
                                                              @Query("restaurantId") int restaurantId);
+
+    @GET("orderDetailByRestaurant")
+    Observable<OrderDetail> getOrderDetail(@Query("key") String key,
+                                           @Query("orderId") int orderId);
 
     //POST
 

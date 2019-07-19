@@ -54,4 +54,8 @@ dependencies {
 
     //SPOTSDIALOG
     implementation 'com.github.d-max:spots-dialog:1.1@aar'
+
+    //PICASSO
+    implementation 'com.squareup.picasso:picasso:2.71828'
+    implementation 'com.github.florent37:expansionpanel:1.2.2'
 }
