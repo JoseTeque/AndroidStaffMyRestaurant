@@ -17,6 +17,7 @@ import com.facebook.accountkit.AccountKitLoginResult;
 import com.facebook.accountkit.ui.AccountKitActivity;
 import com.facebook.accountkit.ui.AccountKitConfiguration;
 import com.facebook.accountkit.ui.LoginType;
+import com.google.firebase.iid.FirebaseInstanceId;
 import com.hermosaprogramacion.premium.androidstaffmyrestaurant.Common.Common;
 import com.hermosaprogramacion.premium.androidstaffmyrestaurant.Retrofit.IMyRestaurantAPI;
 import com.hermosaprogramacion.premium.androidstaffmyrestaurant.Retrofit.RetrofitClient;
@@ -25,6 +26,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import dmax.dialog.SpotsDialog;
+import io.paperdb.Paper;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
@@ -86,46 +88,71 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 dialog.show();
 
-                AccountKit.getCurrentAccount(new AccountKitCallback<Account>() {
-                    @Override
-                    public void onSuccess(Account account) {
+                //get token
 
-                        compositeDisposable.add(myRestaurantAPI.getRestaurantOwner(Common.API_KEY, account.getId())
-                                .subscribeOn(Schedulers.io())
-                                .observeOn(AndroidSchedulers.mainThread())
-                                .subscribe(restaurantOwner -> {
+                FirebaseInstanceId.getInstance()
+                        .getInstanceId()
+                        .addOnFailureListener(e -> {
+                            Toast.makeText(MainActivity.this, "[GET TOKEN]" +e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }).addOnCompleteListener(task -> {
+                    if (task.isSuccessful())
+                    {
+                        AccountKit.getCurrentAccount(new AccountKitCallback<Account>() {
+                            @Override
+                            public void onSuccess(Account account) {
 
-                                            if (restaurantOwner.isSuccess()) //if user available in database
-                                            {
-                                                Common.currentrestaurantOwner = restaurantOwner.getResult().get(0);
-                                                if (Common.currentrestaurantOwner.isStatus())
-                                                {
-                                                    startActivity(new Intent(MainActivity.this, HomeActivity.class));
-                                                    finish();
-                                                }
-                                                else
-                                                {
-                                                    Toast.makeText(MainActivity.this,R.string.permission_deneged, Toast.LENGTH_SHORT).show();
-                                                }
+                                dialog.show();
 
-                                            } else {  //if not available user in database, star UpdateInformationActivity for register
-                                                startActivity(new Intent(MainActivity.this, UpdateInformationActivity.class));
-                                                finish();
-                                            }
+                                compositeDisposable.add(myRestaurantAPI.postToken(Common.API_KEY,account.getId(),task.getResult().getToken())
+                                        .subscribeOn(Schedulers.io())
+                                        .observeOn(AndroidSchedulers.mainThread())
+                                        .subscribe(token -> {
 
-                                            dialog.dismiss();
-                                        },
-                                        throwable -> {
-                                            dialog.dismiss();
-                                            Toast.makeText(MainActivity.this, "[GET USER API]" + throwable.getMessage(), Toast.LENGTH_SHORT).show();
+                                            if (!token.isSuccess())
+                                                Toast.makeText(MainActivity.this, "[UPDATE TOKEN ERROR]" +token.getMessage(), Toast.LENGTH_SHORT).show();
+
+                                            compositeDisposable.add(myRestaurantAPI.getRestaurantOwner(Common.API_KEY, account.getId())
+                                                    .subscribeOn(Schedulers.io())
+                                                    .observeOn(AndroidSchedulers.mainThread())
+                                                    .subscribe(restaurantOwner -> {
+
+                                                                if (restaurantOwner.isSuccess()) //if user available in database
+                                                                {
+                                                                    Common.currentrestaurantOwner = restaurantOwner.getResult().get(0);
+                                                                    if (Common.currentrestaurantOwner.isStatus())
+                                                                    {
+                                                                        startActivity(new Intent(MainActivity.this, HomeActivity.class));
+                                                                        finish();
+                                                                    }
+                                                                    else
+                                                                    {
+                                                                        Toast.makeText(MainActivity.this,R.string.permission_deneged, Toast.LENGTH_SHORT).show();
+                                                                    }
+
+                                                                } else {  //if not available user in database, star UpdateInformationActivity for register
+                                                                    startActivity(new Intent(MainActivity.this, UpdateInformationActivity.class));
+                                                                    finish();
+                                                                }
+
+                                                                dialog.dismiss();
+                                                            },
+                                                            throwable -> {
+                                                                dialog.dismiss();
+                                                                Toast.makeText(MainActivity.this, "[GET USER API]" + throwable.getMessage(), Toast.LENGTH_SHORT).show();
+                                                            }));
+
+                                        }, throwable -> {
+                                            Toast.makeText(MainActivity.this, "[UPDATE TOKEN]" +throwable.getMessage(), Toast.LENGTH_SHORT).show();
                                         }));
-                    }
+                            }
 
-                    @Override
-                    public void onError(AccountKitError accountKitError) {
-                        Toast.makeText(MainActivity.this, "Not sign in ! please sign in", Toast.LENGTH_SHORT).show();
-                        startActivity(new Intent(MainActivity.this, MainActivity.class));
-                        finish();
+                            @Override
+                            public void onError(AccountKitError accountKitError) {
+                                Toast.makeText(MainActivity.this, "Not sign in ! please sign in", Toast.LENGTH_SHORT).show();
+                                startActivity(new Intent(MainActivity.this, MainActivity.class));
+                                finish();
+                            }
+                        });
                     }
                 });
             }

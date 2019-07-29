@@ -4,6 +4,8 @@ import com.hermosaprogramacion.premium.androidstaffmyrestaurant.Model.MaxOrderBy
 import com.hermosaprogramacion.premium.androidstaffmyrestaurant.Model.OrderByRestaurant;
 import com.hermosaprogramacion.premium.androidstaffmyrestaurant.Model.OrderDetail;
 import com.hermosaprogramacion.premium.androidstaffmyrestaurant.Model.RestaurantOwner;
+import com.hermosaprogramacion.premium.androidstaffmyrestaurant.Model.Token;
+import com.hermosaprogramacion.premium.androidstaffmyrestaurant.Model.UpdateOrder;
 import com.hermosaprogramacion.premium.androidstaffmyrestaurant.Model.UpdateRestaurantOwner;
 
 import io.reactivex.Observable;
@@ -11,10 +13,15 @@ import retrofit2.http.Field;
 import retrofit2.http.FormUrlEncoded;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
+import retrofit2.http.PUT;
 import retrofit2.http.Query;
 
 public interface IMyRestaurantAPI {
     //GET
+
+    @GET("token")
+    Observable<Token> getToken(@Query("key") String key,
+                               @Query("fbid") String fbid);
 
     @GET("restaurantOwner")
     Observable<RestaurantOwner> getRestaurantOwner(@Query("key") String key, @Query("fbid") String fbid);
@@ -35,10 +42,23 @@ public interface IMyRestaurantAPI {
 
     //POST
 
+    @POST("token")
+    @FormUrlEncoded
+    Observable<Token> postToken(@Field("key") String key,
+                                @Field("fbid") String fbid,
+                                @Field("token") String token);
+
     @POST("restaurantOwner")
     @FormUrlEncoded
     Observable<UpdateRestaurantOwner> postUpdateRestaurantOwner(@Field("key") String key,
                                                                 @Field("fbid") String fbid,
                                                                 @Field("userPhone") String phone,
                                                                 @Field("userName") String name);
+
+    //PUT
+    @PUT("updateOrder")
+    @FormUrlEncoded
+    Observable<UpdateOrder> updateOrder(@Field("key") String key,
+                                        @Field("orderId") int orderId,
+                                        @Field("orderStatus") int orderStatus);
 }

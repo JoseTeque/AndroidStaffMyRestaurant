@@ -1,4 +1,5 @@
 apply plugin: 'com.android.application'
+apply plugin: 'com.google.gms.google-services'
 
 android {
     compileSdkVersion 28
@@ -28,6 +29,7 @@ dependencies {
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
     implementation 'com.google.android.material:material:1.0.0'
+    implementation 'com.google.firebase:firebase-messaging:19.0.1'
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
@@ -36,7 +38,7 @@ dependencies {
     implementation 'com.google.android:flexbox:1.1.0'
 
     //Facebook Acount kit
-    implementation 'com.facebook.android:account-kit-sdk:5.+'
+    implementation 'com.facebook.android:account-kit-sdk:5.0.0'
 
     //butterknife
     implementation 'com.jakewharton:butterknife:10.1.0'
@@ -58,4 +60,7 @@ dependencies {
     //PICASSO
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.github.florent37:expansionpanel:1.2.2'
+
+    //Paper
+    implementation 'io.paperdb:paperdb:2.6'
 }
