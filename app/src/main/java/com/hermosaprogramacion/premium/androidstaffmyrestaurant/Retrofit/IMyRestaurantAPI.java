@@ -1,9 +1,11 @@
 package com.hermosaprogramacion.premium.androidstaffmyrestaurant.Retrofit;
 
+import com.hermosaprogramacion.premium.androidstaffmyrestaurant.Model.HotFood;
 import com.hermosaprogramacion.premium.androidstaffmyrestaurant.Model.MaxOrderByRestaurant;
 import com.hermosaprogramacion.premium.androidstaffmyrestaurant.Model.OrderByRestaurant;
 import com.hermosaprogramacion.premium.androidstaffmyrestaurant.Model.OrderDetail;
 import com.hermosaprogramacion.premium.androidstaffmyrestaurant.Model.RestaurantOwner;
+import com.hermosaprogramacion.premium.androidstaffmyrestaurant.Model.ShippingOrder;
 import com.hermosaprogramacion.premium.androidstaffmyrestaurant.Model.Token;
 import com.hermosaprogramacion.premium.androidstaffmyrestaurant.Model.UpdateOrder;
 import com.hermosaprogramacion.premium.androidstaffmyrestaurant.Model.UpdateRestaurantOwner;
@@ -23,6 +25,10 @@ public interface IMyRestaurantAPI {
     Observable<Token> getToken(@Query("key") String key,
                                @Query("fbid") String fbid);
 
+    @GET("shippingOrder")
+    Observable<ShippingOrder> getShippingOrder(@Query("key") String key,
+                                               @Query("restaurantId") int restaurantId);
+
     @GET("restaurantOwner")
     Observable<RestaurantOwner> getRestaurantOwner(@Query("key") String key, @Query("fbid") String fbid);
 
@@ -40,6 +46,9 @@ public interface IMyRestaurantAPI {
     Observable<OrderDetail> getOrderDetail(@Query("key") String key,
                                            @Query("orderId") int orderId);
 
+    @GET("hotfood")
+    Observable<HotFood> getHotFood(@Query("key") String key);
+
     //POST
 
     @POST("token")
@@ -54,6 +63,12 @@ public interface IMyRestaurantAPI {
                                                                 @Field("fbid") String fbid,
                                                                 @Field("userPhone") String phone,
                                                                 @Field("userName") String name);
+
+    @POST("shippingOrder")
+    @FormUrlEncoded
+    Observable<ShippingOrder> postShippingOrder(@Field("key") String key,
+                                                @Field("orderId") int orderId,
+                                                @Field("restaurantId") int restaurantId);
 
     //PUT
     @PUT("updateOrder")

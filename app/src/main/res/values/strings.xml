@@ -41,4 +41,5 @@
     <string name="txt_food_quantity">Quantity: 2</string>
     <string name="txt_food_size">Size: Large</string>
     <string name="txt_Addon">Add on</string>
+    <string name="hot_food">Hot Food</string>
 </resources>

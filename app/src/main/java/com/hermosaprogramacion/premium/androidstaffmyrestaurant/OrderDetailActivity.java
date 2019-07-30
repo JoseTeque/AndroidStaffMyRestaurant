@@ -123,7 +123,7 @@ public class OrderDetailActivity extends AppCompatActivity {
 
         statusList.add(new Status(0, "Placed")); //Index 0
         statusList.add(new Status(1, "Shipping")); //Index 1
-        statusList.add(new Status(2, "Shipped")); //Index 2
+      //  statusList.add(new Status(2, "Shipped")); //Index 2
         statusList.add(new Status(3, "Cancelled")); //Index 3
 
         ArrayAdapter adapter = new ArrayAdapter(this,android.R.layout.simple_spinner_item,statusList);
@@ -164,51 +164,122 @@ public class OrderDetailActivity extends AppCompatActivity {
     }
 
     private void updateOrder() {
-        compositeDisposable.add(myRestaurantAPI.updateOrder(Common.API_KEY,Common.currentOrder.getOrderId()
-        ,Common.currentToStatus(spinner_status.getSelectedItem().toString()))
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(updateOrder -> {
-            if (updateOrder.isSuccess())
-            {
-                Common.currentOrder.setOrderStatus(Common.currentToStatus(spinner_status.getSelectedItem().toString()));
 
-                //get Token send notification
-                compositeDisposable.add(myRestaurantAPI.getToken(Common.API_KEY,Common.currentOrder.getOrderFBID())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(token -> {
+        int status = Common.currentToStatus(spinner_status.getSelectedItem().toString());
+        if (status == 1) //shipping status
+        {
+            compositeDisposable.add(myRestaurantAPI.updateOrder(Common.API_KEY,Common.currentOrder.getOrderId()
+                    ,Common.currentToStatus(spinner_status.getSelectedItem().toString()))
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(updateOrder -> {
+                        if (updateOrder.isSuccess())
+                        {
+                            Common.currentOrder.setOrderStatus(Common.currentToStatus(spinner_status.getSelectedItem().toString()));
 
-                    if (token.isSuccess())
-                    {
-                        Map<String,String> messageSend = new HashMap<>();
-                        messageSend.put(Common.NOTIFI_TITLE, "Your Order has been updated..");
-                        messageSend.put(Common.NOTIFI_CONTENT, new StringBuilder("Your Order ")
-                        .append(Common.currentOrder.getOrderId())
-                        .append(" has been update to ")
-                        .append(Common.converStatusToString(Common.currentOrder.getOrderStatus())).toString());
+                          compositeDisposable.add(myRestaurantAPI.postShippingOrder(Common.API_KEY,
+                                  Common.currentOrder.getOrderId(),Common.currentrestaurantOwner.getRestaurantId())
+                          .subscribeOn(Schedulers.io())
+                          .observeOn(AndroidSchedulers.mainThread())
+                          .subscribe(shippingOrder -> {
 
-                        FCMSendData sendData = new FCMSendData(token.getResult().get(0).getToken(),messageSend);
+                              if (shippingOrder.isSuccess())
+                              {
+                                  //get Token send notification
+                                  compositeDisposable.add(myRestaurantAPI.getToken(Common.API_KEY,Common.currentOrder.getOrderFBID())
+                                          .subscribeOn(Schedulers.io())
+                                          .observeOn(AndroidSchedulers.mainThread())
+                                          .subscribe(token -> {
 
-                        compositeDisposable.add(iFcmService.sendNotification(sendData).subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(fcmResponse -> {
+                                              if (token.isSuccess())
+                                              {
+                                                  Map<String,String> messageSend = new HashMap<>();
+                                                  messageSend.put(Common.NOTIFI_TITLE, "Your Order has been updated..");
+                                                  messageSend.put(Common.NOTIFI_CONTENT, new StringBuilder("Your Order ")
+                                                          .append(Common.currentOrder.getOrderId())
+                                                          .append(" has been update to ")
+                                                          .append(Common.converStatusToString(Common.currentOrder.getOrderStatus())).toString());
 
-                                Toast.makeText(OrderDetailActivity.this, "Update Order", Toast.LENGTH_SHORT).show();
+                                                  FCMSendData sendData = new FCMSendData(token.getResult().get(0).getToken(),messageSend);
 
-                        }, throwable -> {
-                            Toast.makeText(this, "Order was update but can't send notification..", Toast.LENGTH_SHORT).show();
-                        }));
+                                                  compositeDisposable.add(iFcmService.sendNotification(sendData).subscribeOn(Schedulers.io())
+                                                          .observeOn(AndroidSchedulers.mainThread())
+                                                          .subscribe(fcmResponse -> {
 
-                    }
+                                                              Toast.makeText(OrderDetailActivity.this, "Update Order", Toast.LENGTH_SHORT).show();
 
-                },throwable -> {
+                                                          }, throwable -> {
+                                                              Toast.makeText(this, "Order was update but can't send notification..", Toast.LENGTH_SHORT).show();
+                                                          }));
 
-                }));
-            }
+                                              }
 
-        },throwable -> {
-            Toast.makeText(this, "[UPDATE ORDER]" + throwable.getMessage(), Toast.LENGTH_SHORT).show();
-        }));
+                                          },throwable -> {
+
+                                          }));
+                              }
+                              else
+                              {
+                                  Toast.makeText(this, "" + shippingOrder.getMessage(), Toast.LENGTH_SHORT).show();
+                              }
+
+                          },throwable -> {
+                              Toast.makeText(this, "[SET SHIPPER]" +throwable.getMessage(), Toast.LENGTH_SHORT).show();
+                          }));
+                        }
+
+                    },throwable -> {
+                        Toast.makeText(this, "[UPDATE ORDER]" + throwable.getMessage(), Toast.LENGTH_SHORT).show();
+                    }));
+        }
+        else {
+            compositeDisposable.add(myRestaurantAPI.updateOrder(Common.API_KEY,Common.currentOrder.getOrderId()
+                    ,Common.currentToStatus(spinner_status.getSelectedItem().toString()))
+                    .subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(updateOrder -> {
+                        if (updateOrder.isSuccess())
+                        {
+                            Common.currentOrder.setOrderStatus(Common.currentToStatus(spinner_status.getSelectedItem().toString()));
+
+                            //get Token send notification
+                            compositeDisposable.add(myRestaurantAPI.getToken(Common.API_KEY,Common.currentOrder.getOrderFBID())
+                                    .subscribeOn(Schedulers.io())
+                                    .observeOn(AndroidSchedulers.mainThread())
+                                    .subscribe(token -> {
+
+                                        if (token.isSuccess())
+                                        {
+                                            Map<String,String> messageSend = new HashMap<>();
+                                            messageSend.put(Common.NOTIFI_TITLE, "Your Order has been updated..");
+                                            messageSend.put(Common.NOTIFI_CONTENT, new StringBuilder("Your Order ")
+                                                    .append(Common.currentOrder.getOrderId())
+                                                    .append(" has been update to ")
+                                                    .append(Common.converStatusToString(Common.currentOrder.getOrderStatus())).toString());
+
+                                            FCMSendData sendData = new FCMSendData(token.getResult().get(0).getToken(),messageSend);
+
+                                            compositeDisposable.add(iFcmService.sendNotification(sendData).subscribeOn(Schedulers.io())
+                                                    .observeOn(AndroidSchedulers.mainThread())
+                                                    .subscribe(fcmResponse -> {
+
+                                                        Toast.makeText(OrderDetailActivity.this, "Update Order", Toast.LENGTH_SHORT).show();
+
+                                                    }, throwable -> {
+                                                        Toast.makeText(this, "Order was update but can't send notification..", Toast.LENGTH_SHORT).show();
+                                                    }));
+
+                                        }
+
+                                    },throwable -> {
+
+                                    }));
+                        }
+
+                    },throwable -> {
+                        Toast.makeText(this, "[UPDATE ORDER]" + throwable.getMessage(), Toast.LENGTH_SHORT).show();
+                    }));
+        }
+
     }
 }
